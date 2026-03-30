@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Discover Your World</title>
+    <link rel="icon" href="https://edube.org/uploads/media/default/0001/04/web-favicon.png">
+    <script src="script.js"></script>
+    
+     
+</head>
+<body>
+    <h1>Discover Your World &#x1F30D; &#x1F30E; <!-- Task 3: Add an emoji here --></h1>
+    <p>Click the button to learn about the continent you're on and some famous geographical features.</p>
+    <button id="getLocation">Discover Location</button>
+
+    <img src="https://edube.org/uploads/media/default/0001/04/continents.jpg" usemap="#image-map" alt="World Map">
+    <map name="image-map">
+        <area shape="rect" coords="386,283,41,17" alt="North America" title="North America" id="north-america" shape="rect" href="javascript:void(0);">
+        <area shape="rect" coords="209,501,358,288" alt="South America" title="South America" id="south-america" shape="rect" href="javascript:void(0);">
+        <area shape="rect" coords="391,68,505,217" alt="Europe" title="Europe" id="europe" shape="rect" href="javascript:void(0);">
+        <area shape="rect" coords="533,217,387,448" alt="Africa" title="Africa" id="africa" shape="rect" href="javascript:void(0);">
+        <area shape="rect" coords="893,153,506,1" alt="Asia" title="Asia" id="asia" shape="rect" href="javascript:void(0);">
+        <area shape="rect" coords="679,353,872,480" alt="Australia and Oceania" title="Australia and Oceania" id="australia-and-oceania" shape="rect" href="javascript:void(0);">
+    </map>
+</body>
+</html>
+
+<!-- JavaScript -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const continentInfo = {
+            'north-america': {
+                continent: 'North America',
+                    river: 'Mississippi River',
+                      mountain: 'Rocky Mountains',
+                        landmarks: 'Arizona Grand Canyon, New York Statue of Liberty, Canadian Niagara Falls',
+            },
+            'south-america': {
+                continent: 'South America',
+                    river: 'Amazon River',
+                      mountain: 'Andes Mountains',
+                        landmarks: 'Machu Picchu, Christ the Redeemer, Iguazu Falls',
+            },
+            'europe': {
+                continent: 'Europe',
+                    river: 'Danube River',
+                      mountain: 'Alps',
+                        landmarks: 'Eiffel Tower, Colosseum, Big Ben',
+            },
+            'africa': {
+                continent: 'Africa',
+                    river: 'Nile River',
+                      mountain: 'Mount Kilimanjaro',
+                        landmarks: 'Pyramids of Giza, Victoria Falls, Serengeti National Park',
+            },
+            'asia': {
+                continent: 'Asia',
+                    river: 'Yangtze River',
+                      mountain: 'Mount Everest',
+                        landmarks: 'Great Wall of China, Taj Mahal, Mount Fuji',
+            },
+            'australia-and-oceania': {
+                continent: 'Australia and Oceania',
+                    river: 'Murray River',
+                      mountain: 'Mount Kosciuszko',
+                        landmarks: 'Sydney Opera House, Great Barrier Reef, Uluru',
+            }
+        };
+        function displayContinentInfo(continentKey) {
+            const info = continentInfo[continentKey];
+            if (info) {
+                alert(`Continent: ${info.continent}\nFamous River: ${info.river}\nFamous Mountain: ${info.mountain}\nFamous Landmarks: ${info.landmarks}`);
+            } else {
+                alert('Continent information not found.');
+            }
+        }
+
+        document.querySelectorAll('area').forEach(area => {
+            area.addEventListener('click', function() {
+                const continent = this.id;
+                displayContinentInfo(continent);
+            });
+        });
+
+        document.getElementById('getLocation').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    const continent = determineContinent(latitude, longitude);
+                    if (continent) {
+                        displayContinentInfo(continent);
+                    }
+                }, function(error) {
+                    alert('Error getting location: ' + error.message);
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        function determineContinent(latitude, longitude) {
+            if (latitude > 0 && longitude < -30) {
+                return 'north-america';
+            } else if (latitude < 0 && longitude < -30) {
+                return 'south-america';
+            } else if (latitude > 0 && longitude > -30 && longitude < 60) {
+                return 'europe';
+            } else if (latitude < 0 && longitude > -30 && longitude < 60) {
+                return 'africa';
+            } else if (latitude > 0 && longitude > 60) {
+                return 'asia';
+            } else if (latitude < 0 && longitude > 60) {
+                return 'australia-and-oceania';
+            } else {
+                alert('Unable to determine continent based on location.');
+                return null;
+            }
+        }
+    });
+</script>
